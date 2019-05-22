@@ -1,0 +1,347 @@
+name: "VDSR"
+input: "data"
+input_dim: 1
+input_dim: 1
+input_dim: 16
+input_dim: 16
+
+#layer {
+#    name: "bn_data"
+#    type: "BatchNorm"
+#    bottom: "data"
+#    top: "bn_data"
+#    batch_norm_param {
+#        use_global_stats: false
+#    }
+#}
+
+#layer {
+#    name: "scale_conv1"
+#    type: "Scale"
+#    bottom: "bn_data"
+#    top: "bn_data"
+#    scale_param {
+#        bias_term: true
+#    }
+#}
+#layer {
+#    name: "relu1"
+#    type: "ReLU"
+#    bottom: "bn_data"
+#    top: "bn_data"
+#}
+
+
+
+#####c####
+
+
+layer {
+    name: "bn_conv1_c"
+    type: "BatchNorm"
+    bottom: "data"
+    top: "bn_conv1_c"
+    batch_norm_param {
+        use_global_stats: false
+    }
+    param {
+        lr_mult: 0
+    }
+    param {
+        lr_mult: 0
+    }
+    param {
+        lr_mult: 0
+    }
+    include {
+        phase: TRAIN
+    }
+}
+layer {
+    name: "bn_conv1_c"
+    type: "BatchNorm"
+    bottom: "data"
+    top: "bn_conv1_c"
+    batch_norm_param {
+        use_global_stats: true
+    }
+    param {
+        lr_mult: 0
+    }
+    param {
+        lr_mult: 0
+    }
+    param {
+        lr_mult: 0
+    }
+    include {
+        phase: TEST
+    }
+}
+layer {
+    name: "scale_conv1_c"
+    type: "Scale"
+    bottom: "bn_conv1_c"
+    top: "bn_conv1_c"
+    scale_param {
+        bias_term: true
+    }
+}
+layer {
+    name: "relu1_c"
+    type: "ReLU"
+    bottom: "bn_conv1_c"
+    top: "bn_conv1_c"
+}
+
+
+layer {
+  name: "fc1_c"
+  type: "InnerProduct"
+  # learning rate and decay multipliers for the weights
+  param {name:"fc_1_w" lr_mult: 0 decay_mult: 1 }
+  # learning rate and decay multipliers for the biases
+  param {name:"fc_1_b" lr_mult: 0 decay_mult: 0 }
+  inner_product_param {
+    num_output: 256
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+  bottom: "bn_conv1_c"
+  top: "fc1_c"
+}
+
+
+
+layer {
+    name: "bn_conv2_c"
+    type: "BatchNorm"
+    bottom: "fc1_c"
+    top: "bn_conv2_c"
+    batch_norm_param {
+        use_global_stats: false
+    }
+    param {
+        lr_mult: 0
+    }
+    param {
+        lr_mult: 0
+    }
+    param {
+        lr_mult: 0
+    }
+    include {
+        phase: TRAIN
+    }
+}
+layer {
+    name: "bn_conv2_c"
+    type: "BatchNorm"
+    bottom: "fc1_c"
+    top: "bn_conv2_c"
+    batch_norm_param {
+        use_global_stats: true
+    }
+    param {
+        lr_mult: 0
+    }
+    param {
+        lr_mult: 0
+    }
+    param {
+        lr_mult: 0
+    }
+    include {
+        phase: TEST
+    }
+}
+layer {
+    name: "scale_conv2_c"
+    type: "Scale"
+    bottom: "bn_conv2_c"
+    top: "bn_conv2_c"
+    scale_param {
+        bias_term: true
+    }
+}
+layer {
+    name: "relu2_c"
+    type: "ReLU"
+    bottom: "bn_conv2_c"
+    top: "bn_conv2_c"
+}
+
+
+layer {
+  name: "fc2_c"
+  type: "InnerProduct"
+  # learning rate and decay multipliers for the weights
+  param {name:"fc_2_w" lr_mult: 0 decay_mult: 1 }
+  # learning rate and decay multipliers for the biases
+  param {name:"fc_2_b" lr_mult: 0 decay_mult: 0 }
+  inner_product_param {
+    num_output: 256
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+  bottom: "bn_conv2_c"
+  top: "fc2_c"
+}
+
+
+
+layer {
+    name: "bn_conv3_c"
+    type: "BatchNorm"
+    bottom: "fc2_c"
+    top: "bn_conv3_c"
+    batch_norm_param {
+        use_global_stats: false
+    }
+    param {
+        lr_mult: 0
+    }
+    param {
+        lr_mult: 0
+    }
+    param {
+        lr_mult: 0
+    }
+    include {
+        phase: TRAIN
+    }
+}
+layer {
+    name: "bn_conv3_c"
+    type: "BatchNorm"
+    bottom: "fc2_c"
+    top: "bn_conv3_c"
+    batch_norm_param {
+        use_global_stats: true
+    }
+    param {
+        lr_mult: 0
+    }
+    param {
+        lr_mult: 0
+    }
+    param {
+        lr_mult: 0
+    }
+    include {
+        phase: TEST
+    }
+}
+layer {
+    name: "scale_conv3_c"
+    type: "Scale"
+    bottom: "bn_conv3_c"
+    top: "bn_conv3_c"
+    scale_param {
+        bias_term: true
+    }
+}
+layer {
+    name: "relu3_c"
+    type: "ReLU"
+    bottom: "bn_conv3_c"
+    top: "bn_conv3_c"
+}
+
+
+layer {
+  name: "fc3_c"
+  type: "InnerProduct"
+  # learning rate and decay multipliers for the weights
+  param {name:"fc_3_w" lr_mult: 0 decay_mult: 1 }
+  # learning rate and decay multipliers for the biases
+  param {name:"fc_3_b" lr_mult: 0 decay_mult: 0 }
+  inner_product_param {
+    num_output: 256
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+  bottom: "bn_conv3_c"
+  top: "fc3_c"
+}
+
+
+
+layer {
+    name: "reshape"
+    type: "Reshape"
+    bottom: "fc3_c"
+    top: "reshape"
+    reshape_param {
+      shape {
+	    dim: 0
+		dim: 1
+        dim: 16
+        dim: 16 # infer it from the other dimensions
+      }
+    }
+  }
+ layer {
+    name: "eltwise-dct-dct"
+    type: "Eltwise"
+   
+	bottom: "reshape"
+    bottom: "data"
+
+    top: "eltwise-dct-dct"
+    eltwise_param {
+        operation: SUM
+    }
+} 
+
+
+##################dct-pixel
+
+
+#####c####
+
+
+
+layer {
+  name: "fc1_cc"
+  type: "InnerProduct"
+  # learning rate and decay multipliers for the weights
+  param {name:"fc_1_ww" lr_mult: 1 decay_mult: 1 }
+  # learning rate and decay multipliers for the biases
+  param {name:"fc_1_bb" lr_mult: 2 decay_mult: 0 }
+  inner_product_param {
+    num_output: 256
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+  bottom: "eltwise-dct-dct"
+  top: "fc1_cc"
+}
+
+
+
+
+
+
+
+  
